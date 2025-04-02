@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness Predictor</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .animate-fade {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-blue-50">
+    <div class="min-h-screen p-6">
+        <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-8">
+            <h1 class="text-3xl font-bold text-center text-blue-600 mb-8">Fitness Predictor</h1>
+            
+            <form id="fitnessForm" class="space-y-6">
+                <!-- Basic Information -->
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Name</label>
+                        <input type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border" required>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Gender</label>
+                        <select class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border" required>
+                            <option value="">Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Age</label>
+                        <input type="number" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border" required min="1" max="120">
+                    </div>
+
+                    <!-- Weight Section -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Weight</label>
+                        <div class="flex gap-4">
+                            <div class="flex-1">
+                                <input type="number" id="weight" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border" required>
+                            </div>
+                            <select id="weightUnit" class="mt-1 w-24 rounded-md border-gray-300 shadow-sm p-2 border">
+                                <option value="kg">kg</option>
+                                <option value="lbs">lbs</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Height Section -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Height</label>
+                        <div class="flex gap-4">
+                            <div class="flex-1">
+                                <input type="number" id="height" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border" required>
+                            </div>
+                            <select id="heightUnit" class="mt-1 w-24 rounded-md border-gray-300 shadow-sm p-2 border">
+                                <option value="cm">cm</option>
+                                <option value="ft">ft</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Fitness Goals -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Fitness Goals (Select multiple if needed)</label>
+                        <div class="mt-2 space-y-2">
+                            <label class="inline-flex items-center">
+                                <input type="checkbox" class="form-checkbox" name="goals" value="gainWeight">
+                                <span class="ml-2">Gain Weight</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="checkbox" class="form-checkbox" name="goals" value="loseWeight">
+                                <span class="ml-2">Lose Weight</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="checkbox" class="form-checkbox" name="goals" value="gainMuscle">
+                                <span class="ml-2">Gain Muscle</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="checkbox" class="form-checkbox" name="goals" value="manageStress">
+                                <span class="ml-2">Manage Stress</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Why did you choose these goals?</label>
+                        <textarea class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border" rows="3" required></textarea>
+                    </div>
+
+                    <!-- Activity Level -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Baseline Activity Level</label>
+                        <select class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border" required>
+                            <option value="">Select Activity Level</option>
+                            <option value="notActive">Not Very Active</option>
+                            <option value="lightlyActive">Lightly Active</option>
+                            <option value="active">Active</option>
+                            <option value="veryActive">Very Active</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Goal Weight</label>
+                        <input type="number" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border" required>
+                    </div>
+
+                    <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200">
+                        Calculate Fitness Plan
+                    </button>
+                </div>
+            </form>
+
+            <!-- Results Section (Hidden by default) -->
+            <div id="results" class="hidden mt-8 space-y-6">
+                <div class="bg-blue-100 p-6 rounded-lg animate-fade">
+                    <h2 class="text-2xl font-bold text-blue-800 mb-4">Your Fitness Analysis</h2>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <h3 class="text-xl font-semibold text-blue-700">BMI Results</h3>
+                            <p id="bmiResult" class="mt-2"></p>
+                            <p id="bmiCategory" class="mt-1 font-medium"></p>
+                        </div>
+
+                        <div>
+                            <h3 class="text-xl font-semibold text-blue-700">MACROS</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
+                                <div class="bg-white p-4 rounded-lg shadow">
+                                    <h4 class="font-medium text-blue-600">Proteins</h4>
+                                    <p id="proteinMacro"></p>
+                                </div>
+                                <div class="bg-white p-4 rounded-lg shadow">
+                                    <h4 class="font-medium text-blue-600">Carbohydrates</h4>
+                                    <p id="carbsMacro"></p>
+                                </div>
+                                <div class="bg-white p-4 rounded-lg shadow">
+                                    <h4 class="font-medium text-blue-600">Fats</h4>
+                                    <p id="fatsMacro"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="text-xl font-semibold text-blue-700">Recommended Diet</h3>
+                            <p id="dietRecommendation" class="mt-2"></p>
+                        </div>
+
+                        <div>
+                            <h3 class="text-xl font-semibold text-blue-700">Exercise Recommendations</h3>
+                            <p id="exerciseRecommendation" class="mt-2"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('fitnessForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const weight = parseFloat(document.getElementById('weight').value);
+            const weightUnit = document.getElementById('weightUnit').value;
+            const height = parseFloat(document.getElementById('height').value);
+            const heightUnit = document.getElementById('heightUnit').value;
+            
+            // Convert measurements if needed
+            const weightInKg = weightUnit === 'lbs' ? weight * 0.453592 : weight;
+            const heightInM = heightUnit === 'ft' ? height * 0.3048 : height / 100;
+            
+            // Calculate BMI
+            const bmi = weightInKg / (heightInM * heightInM);
+            
+            // Determine BMI category
+            let bmiCategory;
+            if (bmi < 18.5) bmiCategory = "Underweight";
+            else if (bmi < 25) bmiCategory = "Normal weight";
+            else if (bmi < 30) bmiCategory = "Overweight";
+            else bmiCategory = "Obese";
+            
+            // Calculate macros (simplified example)
+            const proteins = Math.round(weightInKg * 2);
+            const carbs = Math.round(weightInKg * 3);
+            const fats = Math.round(weightInKg * 1);
+            
+            // Update results
+            document.getElementById('bmiResult').textContent = `Your BMI is: ${bmi.toFixed(1)}`;
+            document.getElementById('bmiCategory').textContent = `Category: ${bmiCategory}`;
+            document.getElementById('proteinMacro').textContent = `${proteins}g per day`;
+            document.getElementById('carbsMacro').textContent = `${carbs}g per day`;
+            document.getElementById('fatsMacro').textContent = `${fats}g per day`;
+            
+            // Get selected goals
+            const goals = Array.from(document.querySelectorAll('input[name="goals"]:checked'))
+                              .map(checkbox => checkbox.value);
+            
+            // Generate exercise recommendations based on goals
+            let exercises = "";
+            if (goals.includes('gainWeight') || goals.includes('gainMuscle')) {
+                exercises = "Focus on compound exercises: Squats, Deadlifts, Bench Press, and Progressive Overload training.";
+            } else if (goals.includes('loseWeight')) {
+                exercises = "Combine cardio (running, cycling, swimming) with HIIT workouts. Include strength training 2-3 times per week.";
+            }
+            
+            // Generate diet recommendations based on goals
+            let diet = "";
+            if (goals.includes('gainWeight')) {
+                diet = "Increase caloric intake with nutrient-dense foods. Focus on healthy fats, complex carbs, and lean proteins.";
+            } else if (goals.includes('loseWeight')) {
+                diet = "Create a moderate caloric deficit. Emphasize protein intake, vegetables, and whole grains.";
+            }
+            
+            document.getElementById('exerciseRecommendation').textContent = exercises;
+            document.getElementById('dietRecommendation').textContent = diet;
+            
+            // Show results section with animation
+            document.getElementById('results').classList.remove('hidden');
+        });
+    </script>
+<script>document.body.addEventListener('wheel', e => { if (!e.ctrlKey) return; e.preventDefault(); return }, { passive: false })</script>
+	</body>
+</html>
